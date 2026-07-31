@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Happy You Day! 🎉</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Quicksand:wght@400;500;600;700&display=swap');
+
+  :root{
+    --cream: #FFF6EE;
+    --blush: #FFD9E3;
+    --rose: #E8567D;
+    --rose-deep: #C9406A;
+    --lavender: #C9B6E4;
+    --gold: #F2B948;
+    --ink: #5A3B45;
+    --grey-lock: #B9AFC4;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html,body{
+    margin:0;
+    padding:0;
+    width:100%;
+    min-height:100vh;
+    background: radial-gradient(circle at 20% 20%, #FFE9F0 0%, var(--cream) 55%, #FBEFE0 100%);
+    font-family:'Quicksand', sans-serif;
+    color: var(--ink);
+    overflow-x:hidden;
+  }
+
+  .stage{
+    position:relative;
+    width:100%;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:40px 20px 60px;
+  }
+
+  .intro{
+    text-align:center;
+    margin-bottom: 30px;
+    z-index:5;
+  }
+  .intro .eyebrow{
+    font-size:13px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    color: var(--rose);
+    font-weight:700;
+  }
+  .intro h1{
+    font-family:'Caveat', cursive;
+    font-size: 42px;
+    margin: 4px 0 0;
+    color: var(--rose-deep);
+    font-weight:700;
+  }
+
+  /* floating background decor */
+  .float-deco{
+    position:absolute;
+    font-size:22px;
+    opacity:0.5;
+    animation: drift 6s ease-in-out infinite;
+    pointer-events:none;
+    user-select:none;
+    z-index:0;
+  }
+  @keyframes drift{
+    0%,100%{ transform: translateY(0) rotate(0deg); }
+    50%{ transform: translateY(-14px) rotate(8deg); }
+  }
+
+  .envelopes{
+    display:flex;
+    flex-wrap:wrap;
+    gap: 34px;
+    justify-content:center;
+    align-items:flex-start;
+    width:100%;
+    max-width: 900px;
+    z-index:5;
+  }
+
+  .envelope-group{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    width: 280px;
+  }
+
+  /* ---------- ENVELOPE ---------- */
+  .envelope-wrap{
+    position:relative;
+    width:100%;
+    height:190px;
+    cursor:pointer;
+    transition: transform .6s ease, opacity .6s ease;
+  }
+  .envelope-wrap.opened{
+    transform: scale(0.9) translateY(-10px);
+    opacity:0;
+    pointer-events:none;
+    position:absolute;
+  }
+
+  .envelope-body{
+    position:absolute;
+    inset:0;
+    background: linear-gradient(160deg, #FFFFFF, #FFF0F4);
+    border-radius: 10px;
+    box-shadow: 0 18px 40px -12px rgba(201, 64, 106, 0.35);
+    overflow:hidden;
+  }
+
+  .envelope-flap{
+    position:absolute;
+    top:0; left:0; right:0;
+    height:100px;
+    background: linear-gradient(160deg, var(--rose), var(--rose-deep));
+    clip-path: polygon(0 0, 100% 0, 50% 78%);
+    transform-origin: top center;
+    transition: transform .55s cubic-bezier(.6,-0.2,.35,1.3);
+    z-index:3;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  }
+  .envelope-wrap.opened .envelope-flap{
+    transform: rotateX(180deg);
+  }
+
+  .envelope-body::after{
+    content:"";
+    position:absolute;
+    left:0; right:0; bottom:0;
+    height:60%;
+    background: linear-gradient(160deg, #FFEAF1, #FFDCE8);
+    clip-path: polygon(0 100%, 0 30%, 50% 65%, 100% 30%, 100% 100%);
+    z-index:1;
+  }
+
+  .heart-seal{
+    position:absolute;
+    top:64px; left:50%;
+    transform: translate(-50%, -50%);
+    width:46px; height:46px;
+    background: var(--gold);
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+    color:#fff;
+    z-index:4;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: transform .3s ease, opacity .3s ease, background .3s ease;
+  }
+  .envelope-wrap.opened .heart-seal{
+    opacity:0;
+    transform: translate(-50%,-50%) scale(0.4);
+  }
+
+  /* locked envelope styling */
+  .envelope-wrap.locked .envelope-flap{
+    background: linear-gradient(160deg, var(--lavender), #A997CC);
+  }
+  .envelope-wrap.locked .heart-seal{
+    background: var(--grey-lock);
+  }
+  .envelope-wrap.locked .envelope-body::after{
+    background: linear-gradient(160deg, #F1EDF7, #E9E2F3);
+  }
+  .envelope-wrap.locked{
+    cursor: not-allowed;
+  }
+
+  .envelope-wrap.shake{
+    animation: shake .45s ease;
+  }
+  @keyframes shake{
+    0%,100%{ transform: translateX(0); }
+    20%{ transform: translateX(-7px); }
+    40%{ transform: translateX(7px); }
+    60%{ transform: translateX(-5px); }
+    80%{ transform: translateX(5px); }
+  }
+
+  .tap-hint{
+    margin-top: 16px;
+    text-align:center;
+    font-size:14px;
+    color: var(--rose-deep);
+    font-weight:700;
+    letter-spacing:.2px;
+  }
+  .tap-hint .sub{
+    display:block;
+    font-size:12.5px;
+    font-weight:600;
+    color: var(--ink);
+    opacity:.65;
+    margin-top:3px;
+  }
+  .envelope-group.is-locked .tap-hint{
+    color: var(--lavender);
+  }
+  .envelope-group:not(.is-locked):not(.done) .tap-hint{
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ opacity:.55; }
+    50%{ opacity:1; }
+  }
+
+  /* ---------- CARD ---------- */
+  .card{
+    position:relative;
+    width:100%;
+    max-width:380px;
+    background: #fff;
+    border-radius: 22px;
+    padding: 30px 24px 26px;
+    box-shadow: 0 25px 60px -18px rgba(201, 64, 106, 0.4);
+    opacity:0;
+    transform: translateY(30px) scale(0.96);
+    transition: opacity .7s ease .1s, transform .7s cubic-bezier(.2,.9,.3,1.2) .1s;
+    z-index:5;
+    margin-top: 4px;
+  }
+  .card.show{
+    opacity:1;
+    transform: translateY(0) scale(1);
+  }
+
+  .card::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:22px;
+    padding:2px;
+    background: linear-gradient(135deg, var(--blush), var(--lavender), var(--gold));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events:none;
+  }
+
+  .kicker{
+    text-align:center;
+    font-size:12px;
+    letter-spacing: 2.5px;
+    text-transform:uppercase;
+    color: var(--rose);
+    font-weight:700;
+    margin-bottom:6px;
+  }
+
+  .headline{
+    font-family:'Caveat', cursive;
+    font-size: 40px;
+    line-height:1;
+    text-align:center;
+    color: var(--rose-deep);
+    margin: 4px 0 2px;
+  }
+
+  .subname{
+    text-align:center;
+    font-size:18px;
+    font-weight:700;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+
+  .divider{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    margin: 10px 0 14px;
+    color: var(--lavender);
+  }
+  .divider::before, .divider::after{
+    content:"";
+    height:1px;
+    width:44px;
+    background: linear-gradient(90deg, transparent, var(--blush));
+  }
+  .divider::after{ background: linear-gradient(90deg, var(--blush), transparent); }
+
+  .message{
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--ink);
+    text-align:left;
+  }
+  .message p{ margin: 0 0 12px; }
+  .message .accent{
+    color: var(--rose);
+    font-weight:700;
+  }
+
+  .accent-line{
+    text-align:center;
+    white-space: nowrap;
+    font-size: clamp(12.5px, 4vw, 15px);
+    letter-spacing: .3px;
+  }
+
+  .gift-photo{
+    margin: 4px 0 14px;
+    border-radius: 14px;
+    overflow:hidden;
+    box-shadow: 0 12px 28px -10px rgba(201,64,106,0.35);
+    border: 2px solid var(--blush);
+  }
+  .gift-photo img{
+    display:block;
+    width: 100%;
+    height: auto;
+  }
+
+  .signoff{
+    margin-top: 16px;
+    text-align:right;
+    font-family:'Caveat', cursive;
+    font-size: 26px;
+    color: var(--rose-deep);
+  }
+
+  .stickers{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    margin-top: 18px;
+    font-size: 20px;
+  }
+  .stickers span{
+    display:inline-block;
+    animation: bob 2.4s ease-in-out infinite;
+  }
+  .stickers span:nth-child(2){ animation-delay:.3s; }
+  .stickers span:nth-child(3){ animation-delay:.6s; }
+  .stickers span:nth-child(4){ animation-delay:.9s; }
+  @keyframes bob{
+    0%,100%{ transform: translateY(0); }
+    50%{ transform: translateY(-6px); }
+  }
+
+  /* confetti burst */
+  .confetti{
+    position:fixed;
+    top:-10px;
+    font-size: 16px;
+    z-index: 20;
+    pointer-events:none;
+    animation: fall linear forwards;
+  }
+  @keyframes fall{
+    to{
+      transform: translateY(110vh) rotate(360deg);
+      opacity: 0.9;
+    }
+  }
+
+  @media (max-width: 640px){
+    .envelopes{ gap: 44px; }
+  }
+  @media (max-width: 420px){
+    .headline{ font-size: 34px; }
+    .card{ padding: 26px 20px 22px; }
+    .message{ font-size: 14.5px; }
+    .envelope-group{ width: 240px; }
+  }
+
+  /* ---------- MUSIC WIDGET ---------- */
+  .music-widget{
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 30;
+    display:flex;
+    align-items:center;
+    gap:0;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(6px);
+    border-radius: 999px;
+    box-shadow: 0 10px 26px -10px rgba(201,64,106,0.35);
+    padding: 6px;
+    transition: padding .35s ease, gap .35s ease;
+  }
+  .music-widget.expanded{
+    gap: 8px;
+    padding: 6px 14px 6px 6px;
+  }
+  .music-toggle{
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(160deg, var(--rose), var(--rose-deep));
+    color: #fff;
+    font-size: 17px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor: pointer;
+    box-shadow: 0 6px 14px -6px rgba(201,64,106,0.55);
+    transition: transform .2s ease, background .3s ease;
+    position:relative;
+  }
+  .music-toggle:active{ transform: scale(0.92); }
+  .music-toggle.muted{
+    background: linear-gradient(160deg, var(--grey-lock), #A79EB6);
+  }
+  .music-toggle .note-spin{
+    display:inline-block;
+    animation: spin-note 2.6s linear infinite;
+    animation-play-state: paused;
+  }
+  .music-toggle.playing .note-spin{
+    animation-play-state: running;
+  }
+  @keyframes spin-note{
+    from{ transform: rotate(0deg); }
+    to{ transform: rotate(360deg); }
+  }
+
+  .music-vol-wrap{
+    max-width: 0;
+    overflow:hidden;
+    transition: max-width .35s ease;
+    display:flex;
+    align-items:center;
+  }
+  .music-widget.expanded .music-vol-wrap{
+    max-width: 110px;
+  }
+  .music-vol{
+    -webkit-appearance:none;
+    appearance:none;
+    width: 100px;
+    height: 4px;
+    border-radius: 4px;
+    background: var(--blush);
+    outline:none;
+    cursor:pointer;
+  }
+  .music-vol::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    appearance:none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--rose-deep);
+    cursor:pointer;
+    box-shadow: 0 2px 6px rgba(201,64,106,0.5);
+  }
+  .music-vol::-moz-range-thumb{
+    width: 15px;
+    height: 15px;
+    border:none;
+    border-radius: 50%;
+    background: var(--rose-deep);
+    cursor:pointer;
+  }
+
+  .music-label{
+    position:absolute;
+    top: 46px;
+    right: 2px;
+    font-size: 10.5px;
+    font-weight:600;
+    color: var(--rose-deep);
+    opacity:.75;
+    white-space:nowrap;
+    pointer-events:none;
+  }
+
+  @media (max-width: 420px){
+    .music-widget{ top: 12px; right: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="music-widget" id="musicWidget">
+  <button class="music-toggle" id="musicToggle" aria-label="Putar / hentikan musik" title="Musik">
+    <span class="note-spin" id="noteIcon">♪</span>
+  </button>
+  <div class="music-vol-wrap">
+    <input type="range" class="music-vol" id="musicVol" min="0" max="100" value="35" aria-label="Volume musik">
+  </div>
+  <div class="music-label" id="musicLabel">tap buat musik 🎵</div>
+</div>
+
+<div class="stage" id="stage">
+
+  <div class="intro">
+    <div class="eyebrow">Untuk Divania</div>
+    <h1>Ada 2 amplop buat ayang 💌</h1>
+  </div>
+
+  <div class="envelopes">
+
+    <!-- AMPLOP 1: EARLY GIFT -->
+    <div class="envelope-group" id="groupEarly">
+      <div class="envelope-wrap" id="envelopeEarly">
+        <div class="envelope-body"></div>
+        <div class="envelope-flap"></div>
+        <div class="heart-seal">🎁</div>
+      </div>
+      <div class="tap-hint">
+        Early Gift
+        <span class="sub">tap buat buka sekarang</span>
+      </div>
+
+      <div class="card" id="cardEarly">
+        <div class="headline">Early Gift</div>
+        <div class="subname">Divania 🎁</div>
+        <div class="divider">♡</div>
+        <div class="message">
+          <p>Ini early gift dariku, biar ayang makin semangat kalo main padel/badminton 😄</p>
+          <p class="accent-line"><span class="accent">SEPATU ASICS GEL-RESOLUTION X</span></p>
+          <div class="gift-photo">
+            <img src="https://down-id.img.susercontent.com/file/id-11134207-81ztq-mq797ntuwtmod1" alt="Sepatu Asics Gel-Resolution X">
+          </div>
+          <p>Simpen dulu ya excitement-nya, soalnya masih ada satu amplop lagi🔒</p>
+        </div>
+        <div class="signoff">— Faris</div>
+        <div class="stickers"><span>🎁</span><span>💫</span><span>🌷</span></div>
+      </div>
+    </div>
+
+    <!-- AMPLOP 2: UCAPAN HARI-H -->
+    <div class="envelope-group locked-group is-locked" id="groupHariH">
+      <div class="envelope-wrap locked" id="envelopeHariH">
+        <div class="envelope-body"></div>
+        <div class="envelope-flap"></div>
+        <div class="heart-seal">🔒</div>
+      </div>
+      <div class="tap-hint" id="hariHHint">
+        Ucapan Hari-H
+        <span class="sub" id="hariHSub">memuat…</span>
+      </div>
+
+      <div class="card" id="cardHariH">
+        <div class="kicker">Sepucuk surat kecil untuk</div>
+        <div class="headline">Happy Birthday</div>
+        <div class="subname">Divania 🎂</div>
+        <div class="divider">♡</div>
+        <div class="message">
+          <p>Selamat ulang tahun, sayangku. Hari ini tuh spesial banget, soalnya dunia lagi ngerayain hari lahirnya orang yang paling bikin hari-hariku jadi lebih hangat — <span class="accent">hiperbola dikit wkwk</span>.</p>
+          <p>Makasih ya udah jadi Divania yang selalu ada buat aku, yang tawanya bisa nular, dan yang bikin hal paling sederhana pun jadi berasa spesial kalau dijalanin berdua. Semoga umur baru ini bawa lebih banyak alasan buat ayang senyum, lebih semangat buat kejar target, kurangin overthinking nya yaa, dan lebih banyak lagi momen seru baru yang kita lewatin bareng. Pokonya apapun doa baik nya semoga terkabul aamiin.</p>
+          <p>Aku cuma mau bilang: <br>Makasih udah milih aku buat jadi bagian dari hidup ayang. Semoga aku bisa terus jadi tempat pulang yang nyaman buat ayang, hari ini dan seterusnya.</p>
+          <p>Selamat ulang tahun, Ayang. <br>Aku sayang ayang — walaupun aku nyebelin suka buat nangis cuma karena main ML hehe 🤍</p>
+        </div>
+        <div class="signoff">— Faris</div>
+        <div class="stickers"><span>🎈</span><span>🎉</span><span>🌷</span><span>✨</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const stage = document.getElementById('stage');
+
+  // ambient floating decor behind everything
+  const decos = ['🌸','✨','💫','🎀','🌷','💗'];
+  for(let i=0;i<10;i++){
+    const el = document.createElement('div');
+    el.className='float-deco';
+    el.textContent = decos[Math.floor(Math.random()*decos.length)];
+    el.style.left = Math.random()*90+'%';
+    el.style.top = Math.random()*90+'%';
+    el.style.animationDelay = (Math.random()*4)+'s';
+    el.style.animationDuration = (5+Math.random()*3)+'s';
+    stage.appendChild(el);
+  }
+
+  function burstConfetti(){
+    const colors = ['#E8567D','#F2B948','#C9B6E4','#FFD9E3'];
+    const shapes = ['🎉','🎊','💗','⭐'];
+    for(let i=0;i<26;i++){
+      const c = document.createElement('div');
+      c.className='confetti';
+      c.textContent = shapes[Math.floor(Math.random()*shapes.length)];
+      c.style.left = Math.random()*100+'vw';
+      c.style.fontSize = (12+Math.random()*10)+'px';
+      c.style.animationDuration = (2.2+Math.random()*1.6)+'s';
+      c.style.color = colors[Math.floor(Math.random()*colors.length)];
+      document.body.appendChild(c);
+      setTimeout(()=>c.remove(), 4000);
+    }
+  }
+
+  function openEnvelope(envelopeId, cardId){
+    const envelope = document.getElementById(envelopeId);
+    const card = document.getElementById(cardId);
+    envelope.classList.add('opened');
+    burstConfetti();
+    setTimeout(() => {
+      card.classList.add('show');
+    }, 350);
+  }
+
+  /* ---------- AMPLOP 1: EARLY GIFT (bebas dibuka) ---------- */
+  let earlyOpened = false;
+  const envelopeEarly = document.getElementById('envelopeEarly');
+  const groupEarly = document.getElementById('groupEarly');
+  envelopeEarly.addEventListener('click', () => {
+    if(earlyOpened) return;
+    earlyOpened = true;
+    groupEarly.classList.add('done');
+    openEnvelope('envelopeEarly', 'cardEarly');
+  });
+
+  /* ---------- AMPLOP 2: UCAPAN HARI-H (terkunci sampai tanggal) ---------- */
+
+  // ubah tanggal ini kalau perlu (format: TAHUN, BULAN-1, TANGGAL)
+  const BIRTHDAY_DATE = new Date(2026, 7, 10); // 10 Agustus 2026
+
+  const envelopeHariH = document.getElementById('envelopeHariH');
+  const groupHariH = document.getElementById('groupHariH');
+  const hariHSub = document.getElementById('hariHSub');
+  let hariHOpened = false;
+
+  function daysUntilBirthday(){
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const diffMs = BIRTHDAY_DATE - today;
+    return Math.ceil(diffMs / (1000*60*60*24));
+  }
+
+  function updateHariHState(){
+    const days = daysUntilBirthday();
+    if(days > 0){
+      envelopeHariH.classList.add('locked');
+      groupHariH.classList.add('is-locked');
+      hariHSub.textContent = days === 1 ? 'buka besok ya 🔒' : `buka ${days} hari lagi 🔒`;
+    } else {
+      envelopeHariH.classList.remove('locked');
+      groupHariH.classList.remove('is-locked');
+      hariHSub.textContent = 'udah boleh dibuka! ✨';
+    }
+  }
+  updateHariHState();
+
+  envelopeHariH.addEventListener('click', () => {
+    if(envelopeHariH.classList.contains('locked')){
+      envelopeHariH.classList.remove('shake');
+      void envelopeHariH.offsetWidth; // restart animation
+      envelopeHariH.classList.add('shake');
+      setTimeout(()=> envelopeHariH.classList.remove('shake'), 500);
+      return;
+    }
+    if(hariHOpened) return;
+    hariHOpened = true;
+    groupHariH.classList.add('done');
+    openEnvelope('envelopeHariH', 'cardHariH');
+  });
+
+  /* ================= MUSIC BOX (original tune, generated live) ================= */
+  // Simple, gentle music-box melody built from scratch with the Web Audio API.
+  // No audio files are used, so there's nothing to license — just oscillators.
+
+  const NOTE = {
+    C4:261.63, D4:293.66, E4:329.63, F4:349.23, G4:392.00, A4:440.00, B4:493.88,
+    C5:523.25, D5:587.33, E5:659.25, F5:698.46, G5:783.99, A5:880.00
+  };
+  const BEAT = 0.42; // seconds per quarter-note beat (gentle waltz tempo)
+
+  // "Happy Birthday to You" — its melody has been public domain in the US
+  // since 2015/2016, so this is a free, original instrumental rendition.
+  // Duration values are in quarter-note beats (3/4 time).
+  const MELODY = [
+    ['G4',0.5], ['G4',0.5], ['A4',1], ['G4',1], ['C5',1], ['B4',2],
+    ['G4',0.5], ['G4',0.5], ['A4',1], ['G4',1], ['D5',1], ['C5',2],
+    ['G4',0.5], ['G4',0.5], ['G5',1], ['E5',1], ['C5',1], ['B4',1], ['A4',1.5], [null,0.5],
+    ['F5',0.5], ['F5',0.5], ['E5',1], ['C5',1], ['D5',1], ['C5',2], [null,1]
+  ];
+
+  let actx = null;
+  let masterGain = null;
+  let isPlaying = false;
+  let loopTimer = null;
+  let volume = 0.35;
+
+  function ensureAudio(){
+    if(!actx){
+      actx = new (window.AudioContext || window.webkitAudioContext)();
+      masterGain = actx.createGain();
+      masterGain.gain.value = volume;
+      masterGain.connect(actx.destination);
+    }
+  }
+
+  function pluckNote(freq, when, dur){
+    if(!freq) return; // rest
+    const osc = actx.createOscillator();
+    const g = actx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.value = freq;
+
+    // gentle music-box style envelope: quick attack, soft decay
+    g.gain.setValueAtTime(0.0001, when);
+    g.gain.exponentialRampToValueAtTime(0.9, when + 0.015);
+    g.gain.exponentialRampToValueAtTime(0.0001, when + dur * 0.95);
+
+    osc.connect(g);
+    g.connect(masterGain);
+    osc.start(when);
+    osc.stop(when + dur);
+
+    // a soft high overtone for a little sparkle, like a music box tine
+    const osc2 = actx.createOscillator();
+    const g2 = actx.createGain();
+    osc2.type = 'sine';
+    osc2.frequency.value = freq * 2;
+    g2.gain.setValueAtTime(0.0001, when);
+    g2.gain.exponentialRampToValueAtTime(0.25, when + 0.01);
+    g2.gain.exponentialRampToValueAtTime(0.0001, when + dur * 0.6);
+    osc2.connect(g2);
+    g2.connect(masterGain);
+    osc2.start(when);
+    osc2.stop(when + dur);
+  }
+
+  function scheduleLoop(){
+    const startTime = actx.currentTime + 0.05;
+    let cursor = startTime;
+    let barLength = 0;
+
+    MELODY.forEach(([name, beats]) => {
+      const dur = beats * BEAT;
+      pluckNote(NOTE[name], cursor, dur);
+      cursor += dur;
+      barLength += dur;
+    });
+
+    // queue the next loop iteration a little before this one ends
+    loopTimer = setTimeout(() => {
+      if(isPlaying) scheduleLoop();
+    }, (barLength - 0.15) * 1000);
+  }
+
+  function startMusic(){
+    ensureAudio();
+    if(actx.state === 'suspended') actx.resume();
+    if(isPlaying) return;
+    isPlaying = true;
+    scheduleLoop();
+  }
+
+  function stopMusic(){
+    isPlaying = false;
+    if(loopTimer) clearTimeout(loopTimer);
+  }
+
+  const musicWidget = document.getElementById('musicWidget');
+  const musicToggle = document.getElementById('musicToggle');
+  const noteIcon = document.getElementById('noteIcon');
+  const musicVol = document.getElementById('musicVol');
+  const musicLabel = document.getElementById('musicLabel');
+
+  musicVol.value = Math.round(volume * 100);
+
+  musicToggle.addEventListener('click', () => {
+    if(isPlaying){
+      stopMusic();
+      musicToggle.classList.remove('playing');
+      musicToggle.classList.add('muted');
+      noteIcon.textContent = '♪';
+      musicLabel.textContent = 'musik di-mute 🔇';
+      musicWidget.classList.remove('expanded');
+    } else {
+      startMusic();
+      musicToggle.classList.add('playing');
+      musicToggle.classList.remove('muted');
+      noteIcon.textContent = '♫';
+      musicLabel.textContent = '';
+      musicWidget.classList.add('expanded');
+    }
+  });
+
+  musicVol.addEventListener('input', () => {
+    volume = musicVol.value / 100;
+    if(masterGain) masterGain.gain.value = volume;
+  });
+
+  // fade the "tap for music" hint after a while so it doesn't linger forever
+  setTimeout(() => {
+    if(!isPlaying) musicLabel.style.opacity = '0.4';
+  }, 5000);
+</script>
+
+</body>
+</html>

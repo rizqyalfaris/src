@@ -1,3 +1,3 @@
 {
-    "rewrites": [{ "source": "/(.*)", "destination": "/birthday-divania.html" }]
+    "rewrites": [{ "source": "/(.*)", "destination": "/final-happy-birthday-divania.html" }]
 }
